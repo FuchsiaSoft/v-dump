@@ -120,7 +120,7 @@ namespace IWF.V_Dump.ViewModel
             get { return _SelectedFrame; }
             set
             {
-                _SelectedFrame = value;
+                _SelectedFrame = value ?? VideoFrame.Default;
                 RaisePropertyChanged("SelectedFrame");
 
                 BitmapImage image = new BitmapImage();
@@ -521,12 +521,28 @@ namespace IWF.V_Dump.ViewModel
             {
                 Digest currentReference = null;
 
+                int progress = 0;
+
+                Parallel.For(0, Frames.Count, i =>
+                {
+                    lock (BusyMessage)
+                    {
+                        BusyMessage = $"Computing phash {(progress + 1).ToString("#,###")} of {Frames.Count.ToString("#,###")}";
+                        progress++;
+                        ProgressValue = progress;
+                    }
+
+                    Frames[i].PHash = HashHelper.GetPHash(Frames[i].FullPath);
+                });
+
+                ProgressValue = 0;
+
                 for (int i = 0; i < Frames.Count; i++)
                 {
                     BusyMessage = $"Checking image {(i + 1).ToString("#,###")} of {Frames.Count.ToString("#,###")}";
                     ProgressValue = i;
 
-                    Frames[i].PHash = HashHelper.GetPHash(Frames[i].FullPath);
+                    //Frames[i].PHash = HashHelper.GetPHash(Frames[i].FullPath);
 
                     if (i == 0)
                     {
@@ -549,6 +565,20 @@ namespace IWF.V_Dump.ViewModel
 
             ProgressIndeterminate = true;
             SetFree();
+        }
+
+        public ICommand DeleteCommand { get { return new RelayCommand(Delete, CanDelete); } }
+
+        private bool CanDelete()
+        {
+            if (Frames != null && Frames.Any(f => f.IsSelected)) return true;
+            return false;
+        }
+
+        private void Delete()
+        {
+            Frames = new ObservableCollection<VideoFrame>
+                (Frames.Where(f => f.IsSelected == false));
         }
 
         private void SetBusy(string message = null)
