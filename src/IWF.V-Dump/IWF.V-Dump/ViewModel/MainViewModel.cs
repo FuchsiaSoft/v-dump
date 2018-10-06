@@ -1,4 +1,8 @@
 using GalaSoft.MvvmLight;
+using IWF.V_Dump.Model;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace IWF.V_Dump.ViewModel
 {
@@ -21,27 +25,26 @@ namespace IWF.V_Dump.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
-
-            MyProperty = "test";
+            //IEnumerable<string> images = Directory.EnumerateFiles(@"C:\tmp\gpvid\frames", "*.jpg");
+            //foreach (string image in images)
+            //{
+            //    Frames.Add(new VideoFrame()
+            //    {
+            //        FullPath = image,
+            //        ThumbnailPath = image
+            //    });
+            //}
         }
 
 
-        private string _MyProperty;
-        public string MyProperty
+        private ObservableCollection<VideoFrame> _Frames = new ObservableCollection<VideoFrame>();
+        public ObservableCollection<VideoFrame> Frames
         {
-            get { return _MyProperty; }
+            get { return _Frames; }
             set
             {
-                _MyProperty = value;
-                RaisePropertyChanged("MyProperty");
+                _Frames = value;
+                RaisePropertyChanged("Frames");
             }
         }
 

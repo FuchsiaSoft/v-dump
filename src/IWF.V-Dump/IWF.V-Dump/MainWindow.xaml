@@ -5,11 +5,171 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IWF.V_Dump"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+        Title="V-Dump" Height="600" Width="800"
+        MinWidth="800" MinHeight="600"
+        ResizeMode="CanResizeWithGrip"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        RenderOptions.BitmapScalingMode="HighQuality">
+
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="Header1">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Light"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="SubHeader">
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="Foreground" Value="Gray"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="Header2">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="1"/>
+        </Style>
+        <Style TargetType="Button" x:Key="WideButton">
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
-        <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Text="{Binding MyProperty}"></TextBlock>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Background="WhiteSmoke">
+            <Image Source="Resources/logo.png"
+                   DockPanel.Dock="Left" Margin="10"/>
+            <StackPanel Margin="30,10,10,10">
+                <TextBlock Style="{StaticResource Header1}">
+                    V-DUMP
+                </TextBlock>
+                <TextBlock Style="{StaticResource SubHeader}">
+                    Frame extraction with perception hash based 
+                    de-duplication and facial recognition
+                </TextBlock>
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Style="{StaticResource Header2}" Margin="5">
+                Select video
+            </TextBlock>
+            <DockPanel Margin="10,0,10,0">
+                <Label Width="80" DockPanel.Dock="Left" Content="File:"/>
+                <Button DockPanel.Dock="Right" Margin="1" Content="Browse..." Width="100"/>
+                <TextBox Text="sdfsdfdfhg"/>
+            </DockPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5,10,0">
+                <Button Style="{StaticResource WideButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Path Stretch="Uniform" HorizontalAlignment="Left"
+                              Fill="DarkGreen" Height="16"
+                              Grid.Column="0"
+                              Data="M18,14.5V11A1,1 0 0,0 17,10H16C18.24,8.39 18.76,5.27 17.15,3C15.54,0.78 12.42,0.26 10.17,1.87C9.5,2.35 8.96,3 8.6,3.73C6.25,2.28 3.17,3 1.72,5.37C0.28,7.72 1,10.8 3.36,12.25C3.57,12.37 3.78,12.5 4,12.58V21A1,1 0 0,0 5,22H17A1,1 0 0,0 18,21V17.5L22,21.5V10.5L18,14.5M13,4A2,2 0 0,1 15,6A2,2 0 0,1 13,8A2,2 0 0,1 11,6A2,2 0 0,1 13,4M6,6A2,2 0 0,1 8,8A2,2 0 0,1 6,10A2,2 0 0,1 4,8A2,2 0 0,1 6,6Z"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Extract frames"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource WideButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Path Stretch="Uniform" HorizontalAlignment="Left"
+                              Fill="BlueViolet" Height="16"
+                              Grid.Column="0"
+                              Data="M21,17H7V3H21M21,1H7A2,2 0 0,0 5,3V17A2,2 0 0,0 7,19H21A2,2 0 0,0 23,17V3A2,2 0 0,0 21,1M3,5H1V21A2,2 0 0,0 3,23H19V21H3M15.96,10.29L13.21,13.83L11.25,11.47L8.5,15H19.5L15.96,10.29Z"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Flag duplicates"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource WideButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Path Stretch="Uniform" HorizontalAlignment="Left"
+                              Fill="DarkOrange" Height="16"
+                              Grid.Column="0"
+                              Data="M9,11.75A1.25,1.25 0 0,0 7.75,13A1.25,1.25 0 0,0 9,14.25A1.25,1.25 0 0,0 10.25,13A1.25,1.25 0 0,0 9,11.75M15,11.75A1.25,1.25 0 0,0 13.75,13A1.25,1.25 0 0,0 15,14.25A1.25,1.25 0 0,0 16.25,13A1.25,1.25 0 0,0 15,11.75M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20C7.59,20 4,16.41 4,12C4,11.71 4,11.42 4.05,11.14C6.41,10.09 8.28,8.16 9.26,5.77C11.07,8.33 14.05,10 17.42,10C18.2,10 18.95,9.91 19.67,9.74C19.88,10.45 20,11.21 20,12C20,16.41 16.41,20 12,20Z"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Run facial detection"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource WideButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Path Stretch="Uniform" HorizontalAlignment="Left"
+                              Fill="DarkRed" Height="16"
+                              Grid.Column="0"
+                              Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Delete flagged"/>
+                    </Grid>
+                </Button>
+            </StackPanel>
+            <ProgressBar Margin="10" Height="20"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="7"/>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="LightGray" />
+            <Label Margin="0" Padding="0" Grid.Column="1" Content="⁞" HorizontalAlignment="Center" Foreground="Gray" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" IsHitTestVisible="False"/>
+
+            <DockPanel Margin="10,0,10,0" RenderOptions.BitmapScalingMode="Fant">
+                <WrapPanel DockPanel.Dock="Top">
+                    <GroupBox Header="Duplicate filters" Margin="0,0,20,0">
+                        <StackPanel>
+                            <RadioButton Content="Show all"/>
+                            <RadioButton Content="Duplicates only"/>
+                            <RadioButton Content="Non-Duplicates only"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Facial filters">
+                        <StackPanel>
+                            <RadioButton Content="Show all"/>
+                            <RadioButton Content="With faces only"/>
+                            <RadioButton Content="Without faces only"/>
+                        </StackPanel>
+                    </GroupBox>
+                </WrapPanel>
+                <ListView ItemsSource="{Binding Frames}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </DockPanel>
+            
+        </Grid>
+
+        <TextBlock Margin="5" Grid.Row="3" Style="{StaticResource Header2}">
+            Export images
+        </TextBlock>
+        
     </Grid>
+    
 </Window>
