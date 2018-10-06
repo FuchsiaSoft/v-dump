@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Linq;
 using Shipwreck.Phash;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
 
 namespace IWF.V_Dump.ViewModel
 {
@@ -34,6 +35,8 @@ namespace IWF.V_Dump.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            SelectedFrame = VideoFrame.Default;
+
             SetFree();
 
             for (int i = 1; i <= 60; i++)
@@ -41,12 +44,11 @@ namespace IWF.V_Dump.ViewModel
                 FrameRates.Add(i);
             }
 
-            SelectedFrameRate = FrameRates[0];
+            SelectedFrameRate = FrameRates[2];
 
             
             if (IsInDesignMode)
             {
-                SelectedFrame = VideoFrame.Default;
 
                 IEnumerable<string> images = Directory.EnumerateFiles(@"C:\tmp\gpvid\frames", "thumb*.jpg");
                 foreach (string image in images)
@@ -120,9 +122,27 @@ namespace IWF.V_Dump.ViewModel
             {
                 _SelectedFrame = value;
                 RaisePropertyChanged("SelectedFrame");
+
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(_SelectedFrame.FullPath, UriKind.Relative);
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.EndInit();
+                ImageSource = image;
             }
         }
 
+
+        private BitmapImage _ImageSource;
+        public BitmapImage ImageSource
+        {
+            get { return _ImageSource; }
+            set
+            {
+                _ImageSource = value;
+                RaisePropertyChanged("ImageSource");
+            }
+        }
 
 
         private ObservableCollection<VideoFrame> _Frames = new ObservableCollection<VideoFrame>();

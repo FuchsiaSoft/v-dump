@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IWF.V_Dump.Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,11 @@ namespace IWF.V_Dump
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnExit(ExitEventArgs e)
+        {
+            
+
+            base.OnExit(e);
+        }
     }
 }

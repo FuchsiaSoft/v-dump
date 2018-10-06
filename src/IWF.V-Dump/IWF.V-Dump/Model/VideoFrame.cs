@@ -71,11 +71,7 @@ namespace IWF.V_Dump.Model
             {
                 return new VideoFrame()
                 {
-                    FullPath = "Resources/logo.png",
-                    ThumbnailPath = "Resources/logo.png",
-                    IsSelected = true,
-                    MD5 = "B546E8E2D688226A1881C1DD6393D6A2",
-                    SHA1 = "F84E711CA61C598A667B0EFFABA790AB1BC80D4B"
+                    FullPath = "Resources\\NoImage.png"
                 };
             }
         }

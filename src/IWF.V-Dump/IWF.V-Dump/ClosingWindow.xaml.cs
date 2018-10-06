@@ -11,31 +11,28 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace IWF.V_Dump
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ClosingWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ClosingWindow : Window
     {
-        public MainWindow()
+        public ClosingWindow()
         {
             InitializeComponent();
         }
 
-        private void windowMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
-        }
+            await Task.Run(() =>
+            {
+                TempManager.FinalCleanUp();
+            });
 
-        private void windowMain_Closed(object sender, EventArgs e)
-        {
-            imgMain.Source = null;
-            ClosingWindow closingWindow = new ClosingWindow();
-            closingWindow.Show();
+            Close();
         }
     }
 }

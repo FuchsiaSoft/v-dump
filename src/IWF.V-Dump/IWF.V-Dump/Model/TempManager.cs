@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IWF.V_Dump.Model
@@ -30,11 +31,17 @@ namespace IWF.V_Dump.Model
 
             foreach (DirectoryInfo dir in PreviousDirs)
             {
-                try
+                while (Directory.Exists(dir.FullName))
                 {
-                    dir.Delete(true);
+                    //bloody WPF doesn't dispose image handles properly,
+                    //and setting the onload property stops binding
+                    //updating... so this is the answer, yikes
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch (Exception) { Thread.Sleep(500); }
                 }
-                catch (Exception) { }
             }
         }
 

@@ -10,7 +10,7 @@
         ResizeMode="CanResizeWithGrip"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         RenderOptions.BitmapScalingMode="HighQuality"
-        Name="windowMain">
+        Name="windowMain" Closing="windowMain_Closing" Closed="windowMain_Closed">
 
     <Window.Resources>
         <Style TargetType="TextBlock" x:Key="Header1">
@@ -73,7 +73,7 @@
                 <Label Width="80" DockPanel.Dock="Left" Content="FPS:"/>
                 <ComboBox Margin="1" ItemsSource="{Binding FrameRates}" SelectedItem="{Binding SelectedFrameRate}" Width="100" HorizontalAlignment="Left"/>
                 <TextBlock VerticalAlignment="Center" Margin="5,0,0,0">
-                    (Frames per second to extract, 1 or 2 is recommended)
+                    (Frames per second to extract, 2 to 4 is recommended)
                 </TextBlock>
             </DockPanel>
             <StackPanel IsEnabled="{Binding EnableControls}" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5,10,0">
@@ -234,7 +234,10 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}">
+                                <Image Height="25" Margin="1">
+                                    <Image.Source>
+                                        <BitmapImage CacheOption="OnLoad" UriSource="{Binding ThumbnailPath}"/>
+                                    </Image.Source>
                                     <Image.Style>
                                         <Style TargetType="Image">
                                             <Style.Triggers>
@@ -299,7 +302,7 @@
                                  TextWrapping="Wrap" />
                     </DockPanel>
                 </StackPanel>
-                <Image Margin="10" Source="{Binding SelectedFrame.FullPath}">
+                <Image Margin="10" x:Name="imgMain" Source="{Binding ImageSource}">
                     <Image.BitmapEffect>
                         <DropShadowBitmapEffect
                             Direction="0" ShadowDepth="0"/>
