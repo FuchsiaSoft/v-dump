@@ -397,11 +397,6 @@ namespace IWF.V_Dump.ViewModel
                 }
             });
 
-            //TODO: need to create a style trigger that fires on property
-            //change to update as processed, but this will do for now
-            //lazy programmer Chris, bad programmer :-(
-            Frames = new ObservableCollection<VideoFrame>(Frames);
-
             ProgressIndeterminate = true;
             SetFree();
         }

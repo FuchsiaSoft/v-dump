@@ -32,58 +32,6 @@
             <Setter Property="Width" Value="150"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
-
-        <DataTemplate x:Key="DefaultTemplate">
-            <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"/>
-        </DataTemplate>
-
-        <DataTemplate x:Key="DuplicateTemplate">
-            <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"
-                   Opacity="0.2"/>
-        </DataTemplate>
-
-        <DataTemplate x:Key="FaceTemplate">
-            <Grid>
-                <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"/>
-                <Canvas Background="White" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Path Stretch="Uniform" HorizontalAlignment="Left"
-                              Fill="LightSteelBlue" Height="10"
-                              Grid.Column="0"
-                              Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z">
-                        <Path.Effect>
-                            <DropShadowEffect ShadowDepth="0" BlurRadius="3"
-                                              Color="Black"/>
-                        </Path.Effect>
-                    </Path>
-                </Canvas>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="DuplicateFaceTemplate">
-            <Grid>
-                <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"
-                   Opacity="0.2"/>
-                <Canvas Background="White" HorizontalAlignment="Left" VerticalAlignment="Top">
-                    <Path Stretch="Uniform" HorizontalAlignment="Left"
-                              Fill="LightSteelBlue" Height="10"
-                              Grid.Column="0"
-                              Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z">
-                        <Path.Effect>
-                            <DropShadowEffect Direction="0" ShadowDepth="0"
-                                              Color="Black"/>
-                        </Path.Effect>
-                    </Path>
-                </Canvas>
-            </Grid>
-            
-        </DataTemplate>
-
-        <local:ImageDataTemplateSelector x:Key="TemplateSelector"
-              DefaultTemplate="{StaticResource DefaultTemplate}"
-              DuplicateTemplate="{StaticResource DuplicateTemplate}" 
-              FaceTemplate="{StaticResource FaceTemplate}"
-              DuplicateFaceTemplate="{StaticResource DuplicateFaceTemplate}"/>
-
     </Window.Resources>
     
     <Grid>
@@ -224,13 +172,58 @@
                 </WrapPanel>
                 <ListView ItemsSource="{Binding Frames}" 
                           SelectedItem="{Binding SelectedFrame}"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ItemTemplateSelector="{StaticResource TemplateSelector}">
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}">
+                                    <Image.Style>
+                                        <Style TargetType="Image">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDuplicate}" Value="True">
+                                                    <Setter Property="Opacity" Value="0.2"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsDuplicate}" Value="False">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                                <Canvas Background="White" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                    <Canvas.Style>
+                                        <Style TargetType="Canvas">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasFace}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HasFace}" Value="False">
+                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Canvas.Style>
+                                    <Rectangle Width="12" Height="13"
+                                             Fill="White">
+                                        <Rectangle.Effect>
+                                            <DropShadowEffect ShadowDepth="0" BlurRadius="3"
+                                              Color="Black"/>
+                                        </Rectangle.Effect>
+                                    </Rectangle>
+                                    <Path Stretch="Uniform" HorizontalAlignment="Left"
+                                         Fill="DarkOliveGreen" Stroke="DarkOliveGreen" Height="10" Margin="1,1,0,0"
+                                         Grid.Column="0"
+                                         Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z">
+                                    </Path>
+                                </Canvas>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </DockPanel>
 
