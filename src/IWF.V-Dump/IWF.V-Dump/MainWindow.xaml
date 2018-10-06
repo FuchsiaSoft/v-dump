@@ -47,7 +47,7 @@
                 <Image Height="25" Margin="1" Source="{Binding ThumbnailPath}"/>
                 <Canvas Background="White" HorizontalAlignment="Left" VerticalAlignment="Top">
                     <Path Stretch="Uniform" HorizontalAlignment="Left"
-                              Fill="White" Height="16"
+                              Fill="LightSteelBlue" Height="10"
                               Grid.Column="0"
                               Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z">
                         <Path.Effect>
@@ -65,7 +65,7 @@
                    Opacity="0.2"/>
                 <Canvas Background="White" HorizontalAlignment="Left" VerticalAlignment="Top">
                     <Path Stretch="Uniform" HorizontalAlignment="Left"
-                              Fill="White" Height="16"
+                              Fill="LightSteelBlue" Height="10"
                               Grid.Column="0"
                               Data="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z">
                         <Path.Effect>
@@ -155,7 +155,8 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Flag duplicates"/>
                     </Grid>
                 </Button>
-                <Button Style="{StaticResource WideButton}">
+                <Button Style="{StaticResource WideButton}"
+                        Command="{Binding RunFacialDetectionCommand}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>
@@ -184,9 +185,11 @@
             </StackPanel>
 
             <DockPanel Width="650" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" >
-                <TextBlock Width="200" DockPanel.Dock="Left" VerticalAlignment="Center" 
+                <TextBlock Width="220" DockPanel.Dock="Left" VerticalAlignment="Center" 
                            Margin="10" Text="{Binding BusyMessage}"/>
-                <ProgressBar Margin="10" Height="20" IsIndeterminate="True"/>
+                <ProgressBar Margin="10" Height="20" IsIndeterminate="{Binding ProgressIndeterminate}"
+                             Minimum="{Binding ProgressMin}" Maximum="{Binding ProgressMax}"
+                             Value="{Binding ProgressValue}"/>
             </DockPanel>
 
             

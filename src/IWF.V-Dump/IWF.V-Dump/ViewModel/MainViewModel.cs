@@ -168,6 +168,55 @@ namespace IWF.V_Dump.ViewModel
         }
 
 
+        private double _ProgressMin;
+        public double ProgressMin
+        {
+            get { return _ProgressMin; }
+            set
+            {
+                _ProgressMin = value;
+                RaisePropertyChanged("ProgressMin");
+            }
+        }
+
+
+        private double _ProgressMax;
+        public double ProgressMax
+        {
+            get { return _ProgressMax; }
+            set
+            {
+                _ProgressMax = value;
+                RaisePropertyChanged("ProgressMax");
+            }
+        }
+
+
+        private double _ProgressValue;
+        public double ProgressValue
+        {
+            get { return _ProgressValue; }
+            set
+            {
+                _ProgressValue = value;
+                RaisePropertyChanged("ProgressValue");
+            }
+        }
+
+
+        private bool _ProgressIndeterminate = true;
+        public bool ProgressIndeterminate
+        {
+            get { return _ProgressIndeterminate; }
+            set
+            {
+                _ProgressIndeterminate = value;
+                RaisePropertyChanged("ProgressIndeterminate");
+            }
+        }
+
+
+
 
         public ICommand BrowseFileCommand { get { return new RelayCommand(BrowseFile, CanBrowseFile); } }
 
@@ -318,6 +367,43 @@ namespace IWF.V_Dump.ViewModel
 
             //    process.WaitForExit();
             //}
+        }
+
+        public ICommand RunFacialDetectionCommand { get { return new RelayCommand(RunFacialDetection, CanRunFacialDetection); } }
+
+        private bool CanRunFacialDetection()
+        {
+            if (IsBusy) return false;
+            if (Frames != null && Frames.Count > 0) return true;
+            return false;
+        }
+
+        private async void RunFacialDetection()
+        {
+            SetBusy("Detecting faces...");
+
+            ProgressIndeterminate = false;
+            ProgressMin = 0;
+            ProgressMax = Frames.Count;
+            ProgressValue = 0;
+
+            await Task.Run(() =>
+            {
+                for (int i = 0; i < Frames.Count; i++)
+                {
+                    BusyMessage = $"Checking for faces {(i + 1).ToString("#,###")} of {Frames.Count.ToString("#,###")}";
+                    ProgressValue = i;
+                    Frames[i].HasFace = FaceHelper.HasFace(Frames[i].FullPath);
+                }
+            });
+
+            //TODO: need to create a style trigger that fires on property
+            //change to update as processed, but this will do for now
+            //lazy programmer Chris, bad programmer :-(
+            Frames = new ObservableCollection<VideoFrame>(Frames);
+
+            ProgressIndeterminate = true;
+            SetFree();
         }
 
         private void SetBusy(string message = null)
