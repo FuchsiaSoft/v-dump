@@ -9,7 +9,8 @@
         MinWidth="800" MinHeight="600"
         ResizeMode="CanResizeWithGrip"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        RenderOptions.BitmapScalingMode="HighQuality">
+        RenderOptions.BitmapScalingMode="HighQuality"
+        Name="windowMain">
 
     <Window.Resources>
         <Style TargetType="TextBlock" x:Key="Header1">
@@ -158,16 +159,16 @@
                 <WrapPanel DockPanel.Dock="Top">
                     <GroupBox Header="Duplicate filters" Margin="0,0,20,0">
                         <StackPanel>
-                            <RadioButton Content="Show all"/>
-                            <RadioButton Content="Duplicates only"/>
-                            <RadioButton Content="Non-Duplicates only"/>
+                            <RadioButton Content="Show all" IsChecked="{Binding DupeShowAll}"/>
+                            <RadioButton Content="Duplicates only" IsChecked="{Binding DupeShow}"/>
+                            <RadioButton Content="Non-Duplicates only" IsChecked="{Binding DupeHide}"/>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Facial filters">
                         <StackPanel>
-                            <RadioButton Content="Show all"/>
-                            <RadioButton Content="With faces only"/>
-                            <RadioButton Content="Without faces only"/>
+                            <RadioButton Content="Show all" IsChecked="{Binding FaceAll}"/>
+                            <RadioButton Content="With faces only" IsChecked="{Binding FaceShow}"/>
+                            <RadioButton Content="Without faces only" IsChecked="{Binding FaceHide}"/>
                         </StackPanel>
                     </GroupBox>
                 </WrapPanel>
@@ -179,6 +180,57 @@
                             <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsDuplicate}" Value="True"/>
+                                        <Condition Binding="{Binding Path=DataContext.DupeHide, ElementName=windowMain}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsDuplicate}" Value="False"/>
+                                        <Condition Binding="{Binding Path=DataContext.DupeShow, ElementName=windowMain}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding HasFace}" Value="True"/>
+                                        <Condition Binding="{Binding Path=DataContext.FaceHide, ElementName=windowMain}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding HasFace}" Value="False"/>
+                                        <Condition Binding="{Binding Path=DataContext.FaceShow, ElementName=windowMain}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+
+
+                                <!--<DataTrigger Binding="{Binding Show}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>-->
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>

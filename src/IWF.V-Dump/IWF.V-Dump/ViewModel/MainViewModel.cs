@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq;
 using Shipwreck.Phash;
+using System.ComponentModel;
 
 namespace IWF.V_Dump.ViewModel
 {
@@ -67,6 +68,10 @@ namespace IWF.V_Dump.ViewModel
                     if (i % 2 == 0) Frames[i].HasFace = true;
                 }
 
+                for (int i = 0; i < 30; i++)
+                {
+                    if (i % 3 == 0) Frames[i].Show = false;
+                }
             }
         }
 
@@ -216,6 +221,78 @@ namespace IWF.V_Dump.ViewModel
             }
         }
 
+
+
+        private bool _DupeShowAll = true;
+        public bool DupeShowAll
+        {
+            get { return _DupeShowAll; }
+            set
+            {
+                _DupeShowAll = value;
+                RaisePropertyChanged("DupeShowAll");
+            }
+        }
+
+
+        private bool _DupeShow;
+        public bool DupeShow
+        {
+            get { return _DupeShow; }
+            set
+            {
+                _DupeShow = value;
+                RaisePropertyChanged("DupeShow");
+            }
+        }
+
+
+        private bool _DupeHide;
+        public bool DupeHide
+        {
+            get { return _DupeHide; }
+            set
+            {
+                _DupeHide = value;
+                RaisePropertyChanged("DupeHide");
+            }
+        }
+
+
+        private bool _FaceAll = true;
+        public bool FaceAll
+        {
+            get { return _FaceAll; }
+            set
+            {
+                _FaceAll = value;
+                RaisePropertyChanged("FaceAll");
+            }
+        }
+
+
+        private bool _FaceShow;
+        public bool FaceShow
+        {
+            get { return _FaceShow; }
+            set
+            {
+                _FaceShow = value;
+                RaisePropertyChanged("FaceShow");
+            }
+        }
+
+
+        private bool _FaceHide;
+        public bool FaceHide
+        {
+            get { return _FaceHide; }
+            set
+            {
+                _FaceHide = value;
+                RaisePropertyChanged("FaceHide");
+            }
+        }
 
 
 

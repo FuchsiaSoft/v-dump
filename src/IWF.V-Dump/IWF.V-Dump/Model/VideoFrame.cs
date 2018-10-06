@@ -16,6 +16,19 @@ namespace IWF.V_Dump.Model
         public string SHA1 { get; set; }
         public Digest PHash { get; set; }
 
+
+        private bool _Show = true;
+        public bool Show
+        {
+            get { return _Show; }
+            set
+            {
+                _Show = value;
+                RaisePropertyChanged("Show");
+            }
+        }
+
+
         private bool _IsDuplicate;
         public bool IsDuplicate
         {
