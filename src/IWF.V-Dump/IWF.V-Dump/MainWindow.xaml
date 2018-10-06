@@ -90,7 +90,8 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Extract frames"/>
                     </Grid>
                 </Button>
-                <Button Style="{StaticResource WideButton}">
+                <Button Style="{StaticResource WideButton}"
+                        Command="{Binding CheckForDuplicatesCommand}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30"/>

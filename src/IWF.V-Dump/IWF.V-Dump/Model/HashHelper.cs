@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Shipwreck.Phash;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Shipwreck.Phash.PresentationCore;
+using Shipwreck.Phash.Bitmaps;
+using System.Drawing;
 
 namespace IWF.V_Dump.Model
 {
@@ -29,6 +33,16 @@ namespace IWF.V_Dump.Model
                 byte[] hash = sha1.ComputeHash(stream);
                 string output = BitConverter.ToString(hash).Replace("-", string.Empty);
                 return output;
+            }
+        }
+
+        public static Digest GetPHash(string path)
+        {
+            using (Image image = Image.FromFile(path))
+            using (Bitmap bmp = new Bitmap(image))
+            {
+                Digest hash = ImagePhash.ComputeDigest(bmp.ToLuminanceImage());
+                return hash;
             }
         }
     }

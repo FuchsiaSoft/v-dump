@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq;
+using Shipwreck.Phash;
 
 namespace IWF.V_Dump.ViewModel
 {
@@ -394,6 +395,58 @@ namespace IWF.V_Dump.ViewModel
                     BusyMessage = $"Checking for faces {(i + 1).ToString("#,###")} of {Frames.Count.ToString("#,###")}";
                     ProgressValue = i;
                     Frames[i].HasFace = FaceHelper.HasFace(Frames[i].FullPath);
+                }
+            });
+
+            ProgressIndeterminate = true;
+            SetFree();
+        }
+
+        public ICommand CheckForDuplicatesCommand { get { return new RelayCommand(CheckForDuplicates, CanCheckForDuplicates); } }
+
+        private bool CanCheckForDuplicates()
+        {
+            if (IsBusy) return false;
+            if (Frames != null && Frames.Count > 0) return true;
+            return false;
+        }
+
+        private async void CheckForDuplicates()
+        {
+            SetBusy("Detecting duplicates...");
+
+            ProgressIndeterminate = false;
+            ProgressMin = 0;
+            ProgressMax = Frames.Count;
+            ProgressValue = 0;
+
+            await Task.Run(() =>
+            {
+                Digest currentReference = null;
+
+                for (int i = 0; i < Frames.Count; i++)
+                {
+                    BusyMessage = $"Checking image {(i + 1).ToString("#,###")} of {Frames.Count.ToString("#,###")}";
+                    ProgressValue = i;
+
+                    Frames[i].PHash = HashHelper.GetPHash(Frames[i].FullPath);
+
+                    if (i == 0)
+                    {
+                        currentReference = Frames[i].PHash;
+                    }
+                    else
+                    {
+                        var score = ImagePhash.GetCrossCorrelation(currentReference, Frames[i].PHash);
+                        if (score > 0.8)
+                        {
+                            Frames[i].IsDuplicate = true;
+                        }
+                        else
+                        {
+                            currentReference = Frames[i].PHash;
+                        }
+                    }
                 }
             });
 

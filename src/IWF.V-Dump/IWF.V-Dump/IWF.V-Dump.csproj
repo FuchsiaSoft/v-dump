@@ -81,6 +81,12 @@
     <Reference Include="Shipwreck.Phash, Version=0.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Shipwreck.Phash.0.2.2\lib\net452\Shipwreck.Phash.dll</HintPath>
     </Reference>
+    <Reference Include="Shipwreck.Phash.Bitmaps, Version=0.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shipwreck.Phash.Bitmaps.0.2.1\lib\net452\Shipwreck.Phash.Bitmaps.dll</HintPath>
+    </Reference>
+    <Reference Include="Shipwreck.Phash.PresentationCore, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shipwreck.Phash.PresentationCore.0.2.0\lib\net452\Shipwreck.Phash.PresentationCore.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -100,9 +106,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsBase.4.6.1055.0\lib\WindowsBase.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

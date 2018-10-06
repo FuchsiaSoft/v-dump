@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using Shipwreck.Phash;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace IWF.V_Dump.Model
         public string FullPath { get; set; }
         public string MD5 { get; set; }
         public string SHA1 { get; set; }
-
+        public Digest PHash { get; set; }
 
         private bool _IsDuplicate;
         public bool IsDuplicate
