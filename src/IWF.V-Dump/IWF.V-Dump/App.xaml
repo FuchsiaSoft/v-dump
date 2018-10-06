@@ -2,6 +2,7 @@
   <Application.Resources>
     <ResourceDictionary>
       <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:IWF.V_Dump.ViewModel" />
-    </ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        </ResourceDictionary>
   </Application.Resources>
 </Application>
