@@ -637,8 +637,21 @@ namespace IWF.V_Dump.ViewModel
 
         private void Delete()
         {
-            Frames = new ObservableCollection<VideoFrame>
-                (Frames.Where(f => f.IsSelected == false));
+            //The frames that might be hidden by filtering in the UI
+            //can still be selected in multi select (shift) because
+            //they're just hidden itemcontainers.  So don't allow
+            //those to be deleted regardless of selected state
+            IEnumerable<VideoFrame> framesToKeep = Frames.ToList();
+
+            foreach (VideoFrame frame in framesToKeep)
+            {
+                if (DupeShow && frame.IsDuplicate == false) frame.IsSelected = false;
+                if (DupeHide && frame.IsDuplicate) frame.IsSelected = false;
+                if (FaceShow && frame.HasFace == false) frame.IsSelected = false;
+                if (FaceHide && frame.HasFace) frame.IsSelected = false;
+            }
+
+            Frames = new ObservableCollection<VideoFrame>(framesToKeep.Where(f => f.IsSelected == false));
         }
 
 
