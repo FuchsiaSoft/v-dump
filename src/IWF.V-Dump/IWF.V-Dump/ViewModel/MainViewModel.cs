@@ -714,6 +714,7 @@ namespace IWF.V_Dump.ViewModel
                         using (CsvWriter csvWriter = new CsvWriter(writer))
                         {
                             csvWriter.WriteHeader<OutputModel>();
+                            csvWriter.NextRecord();
                             csvWriter.WriteRecords(output);
                         }
                         zip.AddEntry("_output.csv", File.ReadAllBytes(tempPath));
