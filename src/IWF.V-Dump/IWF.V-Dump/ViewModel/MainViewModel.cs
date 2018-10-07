@@ -13,6 +13,12 @@ using System.Linq;
 using Shipwreck.Phash;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
+using Ionic.Zip;
+using CsvHelper;
+using System.Text;
+using System.Xml.Serialization;
+using System.Windows;
 
 namespace IWF.V_Dump.ViewModel
 {
@@ -316,6 +322,56 @@ namespace IWF.V_Dump.ViewModel
 
 
 
+        private string _ExportPath;
+        public string ExportPath
+        {
+            get { return _ExportPath; }
+            set
+            {
+                _ExportPath = value;
+                RaisePropertyChanged("ExportPath");
+            }
+        }
+
+
+
+        private bool _ExportCSV;
+        public bool ExportCSV
+        {
+            get { return _ExportCSV; }
+            set
+            {
+                _ExportCSV = value;
+                RaisePropertyChanged("ExportCSV");
+            }
+        }
+
+
+        private bool _ExportJson;
+        public bool ExportJson
+        {
+            get { return _ExportJson; }
+            set
+            {
+                _ExportJson = value;
+                RaisePropertyChanged("ExportJson");
+            }
+        }
+
+
+        private bool _ExportXml;
+        public bool ExportXml
+        {
+            get { return _ExportXml; }
+            set
+            {
+                _ExportXml = value;
+                RaisePropertyChanged("ExportXml");
+            }
+        }
+
+
+
         public ICommand BrowseFileCommand { get { return new RelayCommand(BrowseFile, CanBrowseFile); } }
 
         private bool CanBrowseFile()
@@ -398,10 +454,12 @@ namespace IWF.V_Dump.ViewModel
                 outDir += "\\";
             }
 
+            int cpuCount = Environment.ProcessorCount;
+
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = ".\\ext\\ffmpeg.exe",
-                Arguments = $"-i \"{path}\" -qscale:v 2 -vf fps={fps} \"{outDir}frame_%05d.jpg\"",
+                Arguments = $"-i \"{path}\" -qscale:v 2 -vf fps={fps} -threads {cpuCount} \"{outDir}frame_%05d.jpg\"",
                 WindowStyle = ProcessWindowStyle.Hidden
             };
 
@@ -424,10 +482,12 @@ namespace IWF.V_Dump.ViewModel
                 outDir += "\\";
             }
 
+            int cpuCount = Environment.ProcessorCount;
+
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
                 FileName = ".\\ext\\ffmpeg.exe",
-                Arguments = $"-i \"{path}\" -qscale:v 2 -vf fps={fps},scale=100:-1 \"{outDir}thumb_frame_%05d.jpg\"",
+                Arguments = $"-i \"{path}\" -qscale:v 2 -vf fps={fps},scale=100:-1 -threads {cpuCount} \"{outDir}thumb_frame_%05d.jpg\"",
                 WindowStyle = ProcessWindowStyle.Hidden
             };
 
@@ -579,6 +639,105 @@ namespace IWF.V_Dump.ViewModel
         {
             Frames = new ObservableCollection<VideoFrame>
                 (Frames.Where(f => f.IsSelected == false));
+        }
+
+
+        public ICommand BrowseExportFileCommand { get { return new RelayCommand(BrowseExport, CanBrowseExport); } }
+
+        private bool CanBrowseExport()
+        {
+            if (IsBusy) return false;
+            if (Frames != null && Frames.Count > 0) return true;
+            return false;
+        }
+
+        private void BrowseExport()
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog()
+            {
+                DefaultExt = ".zip",
+                Filter = "Zip file (*.zip)|*.zip",
+                AddExtension = true,
+                OverwritePrompt = true,
+                Title = "Choose save location"
+            };
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                ExportPath = fileDialog.FileName;
+            }
+        }
+
+        public ICommand ExportCommand { get { return new RelayCommand(Export, CanExport); } }
+
+        private bool CanExport()
+        {
+            return !string.IsNullOrWhiteSpace(ExportPath);
+        }
+
+        private async void Export()
+        {
+            SetBusy("Exporting... ");
+
+            await Task.Run(() =>
+            {
+                List<OutputModel> output = Frames
+                    .Select(f => new OutputModel()
+                    {
+                        Name = Path.GetFileName(f.FullPath),
+                        MD5 = f.MD5,
+                        SHA1 = f.SHA1,
+                        HasFace = f.HasFace,
+                        PHash = f.PHash == null ? string.Empty : f.PHash.ToString()
+                    }).ToList();
+
+                using (FileStream fileStream = File.Create(ExportPath))
+                using (ZipFile zip = new ZipFile())
+                {
+                    if (ExportCSV)
+                    {
+                        string tempPath = Path.GetTempFileName();
+                        using (TextWriter writer = File.CreateText(tempPath))
+                        using (CsvWriter csvWriter = new CsvWriter(writer))
+                        {
+                            csvWriter.WriteHeader<OutputModel>();
+                            csvWriter.WriteRecords(output);
+                        }
+                        zip.AddEntry("_output.csv", File.ReadAllBytes(tempPath));
+                        File.Delete(tempPath);
+                    }
+
+                    if (ExportJson)
+                    {
+                        string json = JsonConvert.SerializeObject(output, Formatting.Indented);
+                        zip.AddEntry("_output.json", Encoding.Unicode.GetBytes(json));
+                    }
+
+                    if (ExportXml)
+                    {
+                        XmlSerializer xmlSerializer = new XmlSerializer(output.GetType());
+
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            xmlSerializer.Serialize(stream, output);
+
+                            zip.AddEntry("_output.xml", stream.ToArray());
+                        }
+                    }
+
+                    foreach (VideoFrame frame in Frames)
+                    {
+                        zip.AddEntry(Path.GetFileName(frame.FullPath), File.ReadAllBytes(frame.FullPath));
+                    }
+
+                    zip.Save(fileStream);
+                }
+                
+            });
+
+            MessageBox.Show("Export completed");
+
+            SetFree();
         }
 
         private void SetBusy(string message = null)

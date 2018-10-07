@@ -119,22 +119,9 @@
                         <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Run facial detection"/>
                     </Grid>
                 </Button>
-                <Button Style="{StaticResource WideButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Path Stretch="Uniform" HorizontalAlignment="Left"
-                              Fill="DarkRed" Height="16"
-                              Grid.Column="0"
-                              Data="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z"/>
-                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Delete flagged"/>
-                    </Grid>
-                </Button>
             </StackPanel>
 
-            <DockPanel Width="650" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" >
+            <DockPanel Width="500" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" >
                 <TextBlock Width="220" DockPanel.Dock="Left" VerticalAlignment="Center" 
                            Margin="10" Text="{Binding BusyMessage}"/>
                 <ProgressBar Margin="10" Height="20" IsIndeterminate="{Binding ProgressIndeterminate}"
@@ -318,9 +305,25 @@
             
         </Grid>
 
-        <TextBlock Margin="5" Grid.Row="3" Style="{StaticResource Header2}">
-            Export images
-        </TextBlock>
+        <StackPanel Grid.Row="3">
+            <TextBlock Margin="5" Style="{StaticResource Header2}">
+                Export images
+            </TextBlock>
+            <DockPanel Margin="10,0,10,0" IsEnabled="{Binding EnableControls}">
+                <Label Width="80" DockPanel.Dock="Left" Content="File:"/>
+                <Button DockPanel.Dock="Right" Margin="1" Content="Browse..." Width="100"
+                        Command="{Binding BrowseExportFileCommand}"/>
+                <TextBox Text="{Binding ExportPath}"/>
+            </DockPanel>
+            <StackPanel Margin="90,5,10,0" IsEnabled="{Binding EnableControls}" Orientation="Horizontal">
+                <CheckBox Content="Include CSV" Margin="0,0,20,0" IsChecked="{Binding ExportCSV}"/>
+                <CheckBox Content="Include XML" Margin="0,0,20,0" IsChecked="{Binding ExportXml}"/>
+                <CheckBox Content="Include JSON" Margin="0,0,20,0" IsChecked="{Binding ExportJson}"/>
+                <Button Margin="1" Content="Export" Width="100"
+                        Command="{Binding ExportCommand}"/>
+            </StackPanel>
+        </StackPanel>
+        
         
     </Grid>
     
